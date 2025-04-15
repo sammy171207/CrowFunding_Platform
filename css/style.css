@@ -1,0 +1,24 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+   
+}
+header{
+    padding:20px;
+    display: flex;
+    align-items: center;
+    justify-content:space-between;
+    background: #EF233C;
+    color: #d1d6d8;
+}
+
+header button{
+    padding: 10px;
+    border-radius: 10px;
+}
+.navbar .lgn_btn a {
+    text-decoration: none;
+    color: #D90429;
+    display: block;
+  }

@@ -1,0 +1,16 @@
+{
+    "campaigns": {
+      "campaignId123": {
+        "title": "Save the Rainforest",
+        "description": "A project to protect endangered rainforests in the Amazon.",
+        "goalAmount": 50000,
+        "category": "Environment",
+        "media": {
+          "imageUrl": "https://yourstorage.com/images/rainforest.jpg",
+          "videoUrl": "https://yourstorage.com/videos/intro.mp4"
+        },
+        "createdAt": 1713198420,
+        "createdBy": "userId456"
+      }
+    }
+  }
