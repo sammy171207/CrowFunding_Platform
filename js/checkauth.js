@@ -1,125 +1,147 @@
-import { auth,db } from "./firebase_config.js";
-import{onAuthStateChanged ,signOut} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js"
+import { auth, db } from "./firebase_config.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { doc, setDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-const baseUrl='https://crowfunding-42bf3-default-rtdb.asia-southeast1.firebasedatabase.app/'
-document.addEventListener("DOMContentLoaded",()=>{
-    console.log("....Dashboard Load")
-    const logout_btn = document.getElementById("logout_btn");
-    const compaign_btn=document.getElementById('add_campaign_btn')
-    const add_campaign=document.getElementById('campaignForm')
-    if(logout_btn){
-        logout_btn.addEventListener('click',logoutFn)
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("....dashboard load");
+
+  const addcampaign = document.getElementById('campaignForm');
+  const logout_btn = document.getElementById('logout_btn');
+  const addCampaignBtn = document.getElementById('add_campaign_btn'); 
+  const campaignDataSection = document.getElementById("campaignData"); 
+  const addCampaignSection = document.getElementById("add_campaign"); 
+ 
+
+  if (addcampaign) {
+    addcampaign.addEventListener('submit', addCamp);
+  }
+
+  if (logout_btn) {
+    logout_btn.addEventListener("click", logout);
+  }
+
+  if (addCampaignBtn) {
+    addCampaignBtn.addEventListener("click", () => {
+      // Toggle visibility between sections
+      campaignDataSection.style.display = 'none';
+      addCampaignSection.style.display = 'block';
+    });
+  }
+
+
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      localStorage.setItem("user_email", user.email);
+      localStorage.setItem("uid", user.uid);
+      loadCampaign();
+    } else {
+      window.location.href = "index.html"; // redirect to login if not logged in
     }
-    if(add_campaign){
-        add_campaign.addEventListener('submit',addCamp)
+  });
+});
+
+// ✅ Load Campaigns from Firestore
+async function loadCampaign() {
+  const campaignContainer = document.getElementById("campaignData");
+  campaignContainer.innerHTML = "";
+
+  try {
+    const querySnapshot = await getDocs(collection(db, "campaigns"));
+
+    if (querySnapshot.empty) {
+      campaignContainer.innerHTML = "<p>No campaigns found.</p>";
+      return;
     }
 
-    if (compaign_btn) {
-        compaign_btn.addEventListener('click', () => showSection('add_campaign'));
-    }
-     onAuthStateChanged(auth,(user)=>{
-        console.log(user.email)
-        
-        if(user){
-            loadData()
-            localStorage.setItem('user_email',user.email)
-            localStorage.setItem('user_uid',user.uid)
-        }
-        
-    })
-})
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
 
-async function logoutFn() {
-    console.log("Logout Click");
-    try {
-        await signOut(auth);
-        console.log("User signed out successfully");
-        window.location.href = "index.html";
-      } catch (error) {
-        console.error("Logout error:", error.message);
-        alert("Logout failed: " + error.message);
+      const card = document.createElement('div');
+      card.classList.add('campaign-card');
+
+      card.innerHTML = `
+        <img src="${data.media}" alt="Campaign Image">
+        <div class="campaign-info">
+          <h2>${data.title}</h2>
+          <h3>Goal: $${data.goalAmount.toLocaleString()}</h3>
+          <p>${data.description}</p>
+<button class="donation-button" data-id="${data.id}">Donate</button>        </div>
+      `;
+      const give_donation=document.querySelector(".donation-button")
+      if(give_donation){
+        give_donation.addEventListener("click",giveDonation)
       }
-}
-
-async function loadData() {
-    try {
-        const response = await fetch(baseUrl + "campaigns.json");
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        const data = await response.json();
-        if (!data || typeof data !== 'object') throw new Error('Invalid data');
-        
-        const campaigns = data; // data already contains the campaigns
-        if (!campaigns) throw new Error('No campaigns found');
-        
-        const arr = Object.entries(campaigns).map(([id, campaign]) => ({ id, ...campaign }));
-        display(arr);
-    } catch (error) {
-        console.error("Failed to load campaign data:", error);
-    }
-}
-
-
-
-function display(campaignsArray) {
-    const container = document.getElementById('display_container');
-    container.innerHTML = '';
-    campaignsArray.forEach(campaign => {
-        const card = document.createElement('div');
-        card.classList.add('campaign_card');
-        const createdDate = new Date(campaign.createdAt * 1000).toLocaleDateString();
-        card.innerHTML = `
-            <img src="${campaign.media}" alt="Campaign Image">
-            <h2>${campaign.title}</h2>
-            <h3>Created on: ${createdDate}</h3>
-            <h3>Email: ${campaign.userEmail}</h3>
-            <h3>Goal: $${campaign.goalAmount}</h3>
-            <p>${campaign.description}</p>
-        `;
-        container.appendChild(card);
+      campaignContainer.appendChild(card);
     });
+
+  } catch (error) {
+    console.error("Error loading campaigns:", error);
+    campaignContainer.innerHTML = "<p>Failed to load campaigns.</p>";
+  }
 }
 
+// ✅ Add Campaign to Firestore
 async function addCamp(e) {
-    e.preventDefault();
-    console.log("...Add function load");
+  e.preventDefault();
 
-    const title = document.getElementById('title').value;
-    const description = document.getElementById('description').value;
-    const goalAmount = document.getElementById("goalAmount").value;
-    const media = document.getElementById("media").value;
-    const category = document.getElementById("category").value;
-    const createdBy = localStorage.getItem('user_uid');
-    const userEmail = localStorage.getItem('user_email');
-    const createAt = Math.floor(Date.now() / 1000);
+  const title = document.getElementById("title").value.trim();
+  const description = document.getElementById("description").value.trim();
+  const goalAmount = parseFloat(document.getElementById("goalAmount").value);
+  const media = document.getElementById("media").value.trim();
+  const category = document.getElementById("category").value.trim();
+  const createdBy = localStorage.getItem('user_email');
 
-    const addobbj = { title, description, goalAmount, media, category, createdBy, userEmail, createAt };
+  if (!title || !description || !goalAmount || !media || !category || !createdBy) {
+    alert("Please fill out all fields.");
+    return;
+  }
 
-    try {
-        const add = await fetch(baseUrl + "campaigns.json", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(addobbj)
-        });
 
-        const response = await add.json();
-        alert("Add SuccessFull")
-        window.location.href="dashboard.html"
-        console.log(response);
-    } catch (error) {
-        console.error("Error adding campaign:", error);
-    }
-}
+  try {
+    previewCard(title,description,goalAmount,media,category,createdBy)
+    const campaignsRef = collection(db, "campaigns");
+    const newDocRef = doc(campaignsRef); // generates a new unique ID
 
-function showSection(sectionId) {
-    const sections = ['display_container', 'add_campaign'];
-    sections.forEach((section) => {
-        const sectionElement = document.getElementById(section);
-        if (section === sectionId) {
-            sectionElement.style.display = 'block';  
-        } else {
-            sectionElement.style.display = 'none';  
-        }
+    await setDoc(newDocRef, {
+      id: newDocRef.id,
+      title,
+      description,
+      goalAmount,
+      media,
+      category,
+      createdBy,
+      createdAt: new Date().toISOString()
     });
+
+    alert("Campaign added successfully!");
+    document.getElementById("campaignForm").reset();
+    loadCampaign(); // refresh list
+  } catch (error) {
+    console.error("Error adding campaign:", error);
+    alert("Failed to add campaign. Please try again.");
+  }
 }
+
+async function previewCard(title,description,goalAmount,media,category,createdBy) {
+  const preview_title=document.getElementById('preview_title');
+  const preview_desc=document.getElementById("preview_desc");
+  const preview_goal=document.getElementById('preview_goal');
+  preview_title.textContent=title
+  preview_desc.textContent=description
+  preview_goal.textContent=goalAmount;
+}
+
+/// Donation check;
+async function giveDonation() {
+  console.log("Donation Runing")
+  let show=prompt("Enter The Name");
+  console.log(show)
+}
+
+async function logout() {
+  await signOut(auth);
+  localStorage.clear();
+  window.location.href = "index.html";
+}
+

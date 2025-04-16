@@ -3,55 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard || User </title>
+    <title>Dashboard || User</title>
     <script type="module" src="js/checkauth.js"></script>
     <link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
     <header>
-        <div class="logo"><h1>Crowfunding Platform</h1></div>
+        <div class="logo"><h1>Crowdfunding Platform</h1></div>
         <div class="navbar">
             <button class="">Home</button>
-            <button class="lgn_btn"><a href="login.html">Login</a></button>
+            <!-- Corrected: Replaced button with a link styled as a button -->
             <button id="add_campaign_btn">Add New Campaign</button>
             <button id="logout_btn">Logout</button>
         </div>
     </header>
     <main id="container">
-          <section id="display_container">
-           
-          </section>
-          <section id="add_campaign">
+        <section id="campaignData">
+            
+
+        </section>
+        <section id="add_campaign">
             <h2>Add Campaign</h2>
             <div class="campaign_wrapper">
-              <!-- Form Part -->
-              <form id="campaignForm">
-                <input type="text" id="title" placeholder="Title" />
-                <input type="text" id="description" placeholder="Description" />
-                <input type="number" id="goalAmount" placeholder="Goal Amount" />
-                <input type="text" id="media" placeholder="Media URL" />
-                <select id="category">
-                  <option value="">Select Category</option>
-                  <option value="arts">Arts & Culture</option>
-                  <option value="animal welfare">Animal Welfare</option>
-                  <option value="health">Health</option>
-                  <option value="education">Education</option>
-                </select>
-                <button type="submit">Add Campaign</button>
-              </form>
-          
-              <!-- Preview Part -->
-              <div class="preview_card">
-                <img id="preview_image" src="" alt="Preview Image" />
-                <h3 id="preview_title">Campaign Title</h3>
-                <p id="preview_desc">Description will appear here...</p>
-                <p id="preview_goal">Goal: $0</p>
-                <span id="preview_category">Category: None</span>
-              </div>
-            </div>
-          </section>
-          
+                <!-- Form Part -->
+               <form id="campaignForm">
+                    <input type="text" id="title" placeholder="Title" required />
+                    <input type="text" id="description" placeholder="Description" required />
+                    <input type="number" id="goalAmount" placeholder="Goal Amount" required />
+                    <input type="text" id="media" placeholder="Media URL" required />
+                    <select id="category" required>
+                        <option value="">Select Category</option>
+                        <option value="arts">Arts & Culture</option>
+                        <option value="animal welfare">Animal Welfare</option>
+                        <option value="health">Health</option>
+                        <option value="education">Education</option>
+                    </select>
+                    <button type="submit">Add Campaign</button>
+                </form>
+
+              
+               <div class="preview_card">
+                    <img id="preview_image" src="" alt="Preview Image" />
+                    <h3 id="preview_title">Campaign Title</h3>
+                    <p id="preview_desc">Description will appear here...</p>
+                    <p id="preview_goal">Goal: $0</p>
+                    <span id="preview_category">Category: None</span>
+                </div> 
+       </div> 
+        </section> 
     </main>
-    
 </body>
 </html>

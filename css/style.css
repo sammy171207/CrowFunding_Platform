@@ -1,320 +1,226 @@
-/* Global Reset */
-* {
-    padding: 0;
-    margin: 0;
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    box-sizing: border-box;
-  }
-  
-  /* Header Styles */
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f4f7fc;
+}
+
+header {
+  background-color: #EF233C;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header .logo h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+header .navbar button {
+  background-color: #D90429;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+header .navbar button:hover {
+  background-color: #EF233C;
+}
+
+/* Main Section */
+#container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+/* Campaign Data Section */
+#campaignData {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.campaign-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #d1d6d8;
+}
+
+.campaign-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.campaign-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+
+.campaign-card:hover img {
+  transform: scale(1.05);
+}
+
+.campaign-info h2 {
+  font-size: 20px;
+  margin: 0;
+  color: #D90429;
+}
+
+.campaign-info h3 {
+  color: #EF233C;
+  margin: 10px 0;
+}
+
+.campaign-info p {
+  font-size: 16px;
+  color: #7f8c8d;
+}
+
+/* Add Campaign Form */
+#add_campaign {
+  display: none;
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  margin-top: 30px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #e1e4e8;
+  transition: all 0.3s ease-in-out;
+}
+
+#add_campaign h2 {
+  margin-bottom: 25px;
+  font-size: 28px;
+  color: #D90429;
+  text-align: center;
+}
+
+/* Form Styles */
+#campaignForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#campaignForm input,
+#campaignForm select,
+#campaignForm button {
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e0;
+  transition: border-color 0.3s;
+}
+
+#campaignForm input:focus,
+#campaignForm select:focus {
+  border-color: #EF233C;
+  outline: none;
+}
+
+#campaignForm button {
+  background-color: #D90429;
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+#campaignForm button:hover {
+  background-color: #EF233C;
+}
+
+/* Campaign Wrapper (Form + Preview Side by Side) */
+.campaign_wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 30px;
+  justify-content: space-between;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+/* Preview Card */
+.preview_card {
+  flex: 1;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #dcdfe3;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.preview_card img {
+  width: 100%;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.preview_card h3 {
+  font-size: 20px;
+  color: #D90429;
+  margin-bottom: 8px;
+}
+
+.preview_card p,
+.preview_card span {
+  color: #333;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
   header {
-    padding: 20px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #EF233C;
-    color: #d1d6d8;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  header button {
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    background-color: #d1d6d8;
-    color: #EF233C;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-  
-  header button:hover {
-    background-color: #EF233C;
-    color: #fff;
-  }
-  
-  /* Add focus for accessibility */
-  button:focus,
-  input:focus,
-  select:focus {
-    outline: 2px solid #EF233C;
-    outline-offset: 2px;
-  }
-  
-  /* Navigation Styles */
-  .navbar .lgn_btn a {
-    text-decoration: none;
-    color: #D90429;
-    display: block;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar .lgn_btn a:hover {
-    color: #EF233C;
-    text-decoration: underline;
-  }
-  
-  /* Container Layout */
-  #container {
-    display: grid;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-  
-  /* Grid for Display Items */
-  #display_container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  /* Campaign section layout */
-  .campaign_wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    padding: 20px 0;
-  }
-  
-  /* Preview card inside the form layout */
-  .preview_card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    box-sizing: border-box;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .preview_card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  }
-  
-  .preview_card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
-  
-  .preview_card h3 {
-    font-size: 20px;
-    margin: 10px 0;
-    color: #333;
-  }
-  
-  .preview_card p,
-  .preview_card span {
-    font-size: 14px;
-    color: #444;
-    margin-bottom: 8px;
-  }
-  
-  /* Campaign card styles */
-  .campaign_card {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    padding: 15px;
-    box-sizing: border-box;
-  }
-  
-  .campaign_card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-  }
-  
-  .campaign_card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
-  }
-  
-  /* Text styling */
-  .campaign_card h2 {
-    font-size: 22px;
-    margin: 10px 0;
-    color: #333;
-  }
-  
-  .campaign_card h3 {
-    font-size: 16px;
-    margin: 5px 0;
-    color: #666;
-  }
-  
-  .campaign_card p {
-    font-size: 14px;
-    margin-top: 10px;
-    color: #444;
-    line-height: 1.4;
-  }
-  
-  /* Add Campaign Form Styles */
-  #add_campaign {
-    display: none;
-    background-color: #ffffff;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 600px;
-    margin: 40px auto;
-  }
-  
-  #add_campaign h2 {
-    font-size: 26px;
-    margin-bottom: 20px;
-    color: #EF233C;
-    text-align: center;
-  }
-  
-  #campaignForm {
-    display: flex;
     flex-direction: column;
+    align-items: flex-start;
   }
-  
-  #campaignForm input,
-  #campaignForm select {
-    padding: 14px 16px;
-    margin: 12px 0;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+
+  .navbar button {
+    width: 100%;
+    margin: 5px 0;
   }
-  
-  #campaignForm input:focus,
-  #campaignForm select:focus {
-    border-color: #EF233C;
+
+  #campaignData {
+    grid-template-columns: 1fr;
   }
-  
-  #campaignForm button {
-    padding: 14px;
-    background-color: #EF233C;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 15px;
+
+  .campaign-card {
+    margin-bottom: 20px;
   }
-  
-  #campaignForm button:hover {
-    background-color: #D90429;
+
+  .campaign_wrapper {
+    flex-direction: column;
+    align-items: center;
   }
-  
-  /* Media Queries for Small Screens */
-  
-  /* For devices with width up to 768px */
-  @media screen and (max-width: 768px) {
-  
-    /* Header Adjustments */
-    header {
-      flex-direction: column;
-      align-items: flex-start;
-      padding: 15px;
-    }
-  
-    header button {
-      width: 100%;
-      margin-top: 10px;
-    }
-  
-    /* Adjust grid container to single column for smaller screens */
-    #container {
-      padding: 15px;
-    }
-  
-    /* Grid for Display Items */
-    #display_container {
-      grid-template-columns: 1fr;
-    }
-  
-    /* Campaign Section Layout */
-    .campaign_wrapper {
-      grid-template-columns: 1fr;
-    }
-  
-    /* Preview card inside the form layout */
-    .preview_card {
-      padding: 15px;
-    }
-  
-    .preview_card h3 {
-      font-size: 18px;
-    }
-  
-    /* Campaign Card Styling */
-    .campaign_card h2 {
-      font-size: 18px;
-    }
-  
-    /* Form Elements */
-    #campaignForm input,
-    #campaignForm select {
-      font-size: 14px;
-      padding: 12px 14px;
-    }
-  
-    #campaignForm button {
-      padding: 12px;
-      font-size: 14px;
-    }
+
+  #add_campaign {
+    padding: 20px;
   }
-  
-  /* For devices with width up to 480px */
-  @media screen and (max-width: 480px) {
-  
-    /* Header Adjustments */
-    header {
-      padding: 10px;
-    }
-  
-    header button {
-      padding: 10px;
-      font-size: 14px;
-    }
-  
-    /* Adjust grid container */
-    #container {
-      padding: 10px;
-    }
-  
-    /* Adjust grid for items */
-    #display_container {
-      grid-template-columns: 1fr;
-    }
-  
-    /* Campaign Wrapper */
-    .campaign_wrapper {
-      grid-template-columns: 1fr;
-    }
-  
-    /* Campaign Card Heading */
-    .campaign_card h2 {
-      font-size: 16px;
-    }
-  
-    /* Form Adjustments */
-    #campaignForm input,
-    #campaignForm select {
-      padding: 10px;
-      font-size: 14px;
-    }
-  
-    #campaignForm button {
-      padding: 10px;
-      font-size: 14px;
-    }
+
+  .preview_card {
+    max-width: 100%;
   }
-  
+}
