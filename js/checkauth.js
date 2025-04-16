@@ -34,7 +34,7 @@ async function logoutFn() {
     try {
         await signOut(auth);
         console.log("User signed out successfully");
-        window.location.href = "login.html";
+        window.location.href = "index.html";
       } catch (error) {
         console.error("Logout error:", error.message);
         alert("Logout failed: " + error.message);

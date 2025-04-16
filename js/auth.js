@@ -53,7 +53,7 @@ async function signUp(e) {
   
       alert("Saved successfully");
       console.log("User ID:", userid);
-      window.location.href = 'login.html';
+      window.location.href = 'index.html';
     } catch (error) {
       console.log("Signup error:", error.message);
       alert("Signup failed: " + error.message);

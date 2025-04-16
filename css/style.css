@@ -8,19 +8,37 @@
   
   /* Header Styles */
   header {
-    padding: 20px;
+    padding: 20px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: #EF233C;
     color: #d1d6d8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   header button {
-    padding: 10px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 12px;
     border: none;
     cursor: pointer;
+    background-color: #d1d6d8;
+    color: #EF233C;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  header button:hover {
+    background-color: #EF233C;
+    color: #fff;
+  }
+  
+  /* Add focus for accessibility */
+  button:focus,
+  input:focus,
+  select:focus {
+    outline: 2px solid #EF233C;
+    outline-offset: 2px;
   }
   
   /* Navigation Styles */
@@ -28,32 +46,127 @@
     text-decoration: none;
     color: #D90429;
     display: block;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar .lgn_btn a:hover {
+    color: #EF233C;
+    text-decoration: underline;
   }
   
   /* Container Layout */
   #container {
     display: grid;
     padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
   }
   
   /* Grid for Display Items */
-/* Grid container */
-#display_container {
+  #display_container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     padding: 20px;
-}
-
-/* Campaign card styles */
-#add_campaign {
+  }
+  
+  /* Campaign section layout */
+  .campaign_wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 20px 0;
+  }
+  
+  /* Preview card inside the form layout */
+  .preview_card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .preview_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  }
+  
+  .preview_card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  .preview_card h3 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #333;
+  }
+  
+  .preview_card p,
+  .preview_card span {
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 8px;
+  }
+  
+  /* Campaign card styles */
+  .campaign_card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+  
+  .campaign_card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  }
+  
+  .campaign_card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+  }
+  
+  /* Text styling */
+  .campaign_card h2 {
+    font-size: 22px;
+    margin: 10px 0;
+    color: #333;
+  }
+  
+  .campaign_card h3 {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .campaign_card p {
+    font-size: 14px;
+    margin-top: 10px;
+    color: #444;
+    line-height: 1.4;
+  }
+  
+  /* Add Campaign Form Styles */
+  #add_campaign {
     display: none;
     background-color: #ffffff;
     padding: 40px 30px;
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 1000px;
+    max-width: 600px;
     margin: 40px auto;
   }
   
@@ -64,75 +177,144 @@
     text-align: center;
   }
   
-  .campaign_wrapper {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-  }
-  
   #campaignForm {
-    flex: 1;
     display: flex;
     flex-direction: column;
   }
   
   #campaignForm input,
   #campaignForm select {
-    padding: 12px 15px;
-    margin: 10px 0;
+    padding: 14px 16px;
+    margin: 12px 0;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  #campaignForm input:focus,
+  #campaignForm select:focus {
+    border-color: #EF233C;
   }
   
   #campaignForm button {
-    padding: 12px;
+    padding: 14px;
     background-color: #EF233C;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin-top: 10px;
+    margin-top: 15px;
   }
   
   #campaignForm button:hover {
     background-color: #D90429;
   }
   
-  .preview_card {
-    flex: 1;
-    padding: 20px;
-    border-radius: 10px;
-    background-color: #f4f4f4;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  /* Media Queries for Small Screens */
+  
+  /* For devices with width up to 768px */
+  @media screen and (max-width: 768px) {
+  
+    /* Header Adjustments */
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 15px;
+    }
+  
+    header button {
+      width: 100%;
+      margin-top: 10px;
+    }
+  
+    /* Adjust grid container to single column for smaller screens */
+    #container {
+      padding: 15px;
+    }
+  
+    /* Grid for Display Items */
+    #display_container {
+      grid-template-columns: 1fr;
+    }
+  
+    /* Campaign Section Layout */
+    .campaign_wrapper {
+      grid-template-columns: 1fr;
+    }
+  
+    /* Preview card inside the form layout */
+    .preview_card {
+      padding: 15px;
+    }
+  
+    .preview_card h3 {
+      font-size: 18px;
+    }
+  
+    /* Campaign Card Styling */
+    .campaign_card h2 {
+      font-size: 18px;
+    }
+  
+    /* Form Elements */
+    #campaignForm input,
+    #campaignForm select {
+      font-size: 14px;
+      padding: 12px 14px;
+    }
+  
+    #campaignForm button {
+      padding: 12px;
+      font-size: 14px;
+    }
   }
   
-  .preview_card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    background-color: #ddd;
-  }
+  /* For devices with width up to 480px */
+  @media screen and (max-width: 480px) {
   
-  .preview_card h3 {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 10px;
-  }
+    /* Header Adjustments */
+    header {
+      padding: 10px;
+    }
   
-  .preview_card p {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 10px;
-  }
+    header button {
+      padding: 10px;
+      font-size: 14px;
+    }
   
-  .preview_card span {
-    font-size: 14px;
-    color: #EF233C;
-    font-weight: bold;
+    /* Adjust grid container */
+    #container {
+      padding: 10px;
+    }
+  
+    /* Adjust grid for items */
+    #display_container {
+      grid-template-columns: 1fr;
+    }
+  
+    /* Campaign Wrapper */
+    .campaign_wrapper {
+      grid-template-columns: 1fr;
+    }
+  
+    /* Campaign Card Heading */
+    .campaign_card h2 {
+      font-size: 16px;
+    }
+  
+    /* Form Adjustments */
+    #campaignForm input,
+    #campaignForm select {
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    #campaignForm button {
+      padding: 10px;
+      font-size: 14px;
+    }
   }
   
