@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Signup || Crowfunding</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup || Crowdfunding</title>
+  <link href="css/ls.css" rel="stylesheet"/>
 </head>
 <body>
-   <div class="form_container">
+  <div class="form_container">
     <h2>Sign Up Form</h2>
     <form id="signForm">
-      <input type="email" placeholder="Email" id="sign_email"/>
-      <input type="password" placeholder="Password" id="sign_pwd"/>
-      <select id="signup_role">
+      <input type="email" placeholder="Email" id="sign_email" required />
+      <input type="password" placeholder="Password" id="sign_pwd" required />
+      <select id="signup_role" required>
+        <option value="">Select Role</option>
         <option value="funder">Investor</option>
         <option value="user">User</option>
       </select>
       <button type="submit">Signup</button>
     </form>
-    <p>Already have an account ? <span> <a href="login.html">Login</a></span></p>
-   </div>
-   <script type="module" src="js/auth.js"></script>
+    <p>Already have an account? <span><a href="index.html">Login</a></span></p>
+  </div>
+  <script type="module" src="js/auth.js"></script>
 </body>
 </html>

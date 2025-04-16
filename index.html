@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crowfuning Platform </title>
-    <link href="css/style.css" rel="stylesheet">
-    <script type="module" src="js/auth.js"></script>
+    <title>Login Form || Crowdfunding</title>
+    <link href="css/ls.css" rel="stylesheet"/>
 </head>
 <body>
-    <header>
-        <div class="logo"><h1>Crowfunding Platform</h1></div>
-        <div class="navbar">
-            <button class="">Home</button>
-            <button class="lgn_btn"><a href="login.html">Login</a></button>
-        </div>
-    </header>
+    <div class="form_container">
+        <h2>Login Form</h2>
+        <form id="loginForm">
+            <input type="email" id="login_email" placeholder="Email" required>
+            <input type="password" id="login_pwd" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <span><a href="signup.html">Sign up</a></span></p>
+    </div>
+    <script type="module" src="js/auth.js"></script>
 </body>
 </html>

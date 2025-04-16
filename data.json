@@ -1,16 +1,52 @@
 {
-    "campaigns": {
-      "campaignId123": {
-        "title": "Save the Rainforest",
-        "description": "A project to protect endangered rainforests in the Amazon.",
-        "goalAmount": 50000,
-        "category": "Environment",
-        "media": {
-          "imageUrl": "https://yourstorage.com/images/rainforest.jpg",
-          "videoUrl": "https://yourstorage.com/videos/intro.mp4"
-        },
-        "createdAt": 1713198420,
-        "createdBy": "userId456"
-      }
-    }
+  "campaignId1": {
+    "category": "Environment",
+    "createdAt": 1713198420,
+    "createdBy": "userId101",
+    "description": "Planting 10,000 trees across deforested regions.",
+    "goalAmount": 30000,
+    "media": "https://images.unsplash.com/photo-1433086966358-54859d0ed716?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "title": "Reforest the Earth",
+    "userEmail": "greenlover@example.com"
+  },
+  "campaignId2": {
+    "category": "Education",
+    "createdAt": 1713100000,
+    "createdBy": "userId202",
+    "description": "Building a school in a rural village to improve access to education.",
+    "goalAmount": 50000,
+    "media": "https://images.unsplash.com/photo-1588072432836-e10032774350",
+    "title": "School for All",
+    "userEmail": "teachforall@example.com"
+  },
+  "campaignId3": {
+    "category": "Health",
+    "createdAt": 1713200000,
+    "createdBy": "userId303",
+    "description": "Providing clean water filters to 500 families in need.",
+    "goalAmount": 20000,
+    "media": "https://images.unsplash.com/photo-1587502536263-9298f1b0dbee",
+    "title": "Clean Water Initiative",
+    "userEmail": "watercare@example.com"
+  },
+  "campaignId4": {
+    "category": "Animal Welfare",
+    "createdAt": 1713000000,
+    "createdBy": "userId404",
+    "description": "Rescuing and rehabilitating injured stray animals.",
+    "goalAmount": 15000,
+    "media": "https://images.unsplash.com/photo-1518717758536-85ae29035b6d",
+    "title": "Help Our Strays",
+    "userEmail": "animalhero@example.com"
+  },
+  "campaignId5": {
+    "category": "Arts & Culture",
+    "createdAt": 1712990000,
+    "createdBy": "userId505",
+    "description": "Creating a community mural to celebrate local heritage.",
+    "goalAmount": 10000,
+    "media": "https://images.unsplash.com/photo-1558021212-51b6ecfa0db9",
+    "title": "Walls of Expression",
+    "userEmail": "muralmagic@example.com"
   }
+}

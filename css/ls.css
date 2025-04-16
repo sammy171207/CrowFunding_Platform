@@ -1,0 +1,80 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  }
+  
+  body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  /* Form Container */
+  .form_container {
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .form_container h2 {
+    margin-bottom: 25px;
+    color: #EF233C;
+    font-size: 26px;
+  }
+  
+  /* Inputs and Select */
+  form input,
+  form select {
+    width: 100%;
+    padding: 12px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #fff;
+  }
+  
+  /* Submit Button */
+  form button {
+    width: 100%;
+    padding: 12px;
+    background-color: #EF233C;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+  }
+  
+  form button:hover {
+    background-color: #D90429;
+  }
+  
+  /* Text and Links */
+  .form_container p {
+    margin-top: 20px;
+    color: #444;
+    font-size: 14px;
+  }
+  
+  .form_container a {
+    color: #D90429;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .form_container a:hover {
+    text-decoration: underline;
+  }
+  
