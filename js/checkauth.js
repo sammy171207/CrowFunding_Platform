@@ -7,11 +7,21 @@ import {
   doc,
   setDoc,
   getDocs,
-  getDoc,
   collection,
   query,
   where,
+  getDoc,
+  addDoc,
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+// Global pagination state
+let currentCampaignPage = 1;
+let campaignsPerPage = 6;
+let campaignsData = [];
+
+let currentDonationPage = 1;
+let donationsPerPage = 3;
+let userDonationsData = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   const addcampaign = document.getElementById("campaignForm");
@@ -21,12 +31,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const addCampaignSection = document.getElementById("add_campaign");
   const viewDonationsSection = document.getElementById("userDonationsSection");
   const view_donations_button = document.getElementById("view_donations_button");
-  const homeBtn=document.getElementById("back_btn")
-  
-  if(homeBtn){
-    homeBtn.addEventListener('click',()=>{
-      window.location.href="dashboard.html"
-    })
+  const homeBtn = document.getElementById("back_btn");
+
+  if (homeBtn) {
+    homeBtn.addEventListener("click", () => {
+      window.location.href = "dashboard.html";
+    });
   }
 
   if (addcampaign) {
@@ -46,11 +56,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (view_donations_button) {
-    view_donations_button.addEventListener("click", () => {
+    view_donations_button.addEventListener("click", async () => {
       campaignDataSection.style.display = "none";
       addCampaignSection.style.display = "none";
       viewDonationsSection.style.display = "block";
-      fetchUserDonations(localStorage.getItem("user_email"));
+      await loadUserDonations(localStorage.getItem("user_email"));
+      renderUserDonationsPage(1);
     });
   }
 
@@ -58,75 +69,185 @@ document.addEventListener("DOMContentLoaded", () => {
     if (user) {
       localStorage.setItem("user_email", user.email);
       localStorage.setItem("uid", user.uid);
-      loadCampaign();
+      loadCampaigns();
     } else {
       window.location.href = "index.html";
     }
   });
 });
 
-async function loadCampaign() {
+async function loadCampaigns() {
   const campaignContainer = document.getElementById("campaignData");
   campaignContainer.innerHTML = "";
 
   try {
     const querySnapshot = await getDocs(collection(db, "campaigns"));
+    campaignsData = [];
 
-    if (querySnapshot.empty) {
-      campaignContainer.innerHTML = "<p>No campaigns found.</p>";
-      return;
+    for (const docSnap of querySnapshot.docs) {
+      const data = docSnap.data();
+      data.id = docSnap.id;
+      data.totalDonated = await getTotalDonations(docSnap.id);
+      campaignsData.push(data);
     }
 
-    querySnapshot.forEach(async (docSnap) => {
-      const data = docSnap.data();
-      const campaignId = docSnap.id;
-      const totalDonated = await getTotalDonations(campaignId);
-
-      const card = document.createElement("div");
-      card.classList.add("campaign-card");
-
-      card.innerHTML = `
-        <img src="${data.media}" alt="Campaign Image">
-        <div class="campaign-info">
-          <h2>${data.title}</h2>
-          <h3>Goal: $${data.goalAmount.toLocaleString()}</h3>
-          <h4>Raised: $${totalDonated.toLocaleString()}</h4>
-          <p>${data.description}</p>
-          <button class="donation-button" data-id="${campaignId}">Donate</button>
-
-          <h5>Comments</h5>
-          <div class="comments-section" id="comments-${campaignId}">
-            <!-- Comments will appear here -->
-          </div>
-          <input type="text" id="comment-input-${campaignId}" placeholder="Write a comment...">
-          <button class="post-comment-btn" data-id="${campaignId}">Post Comment</button>
-        </div>
-      `;
-
-      campaignContainer.appendChild(card);
-
-      // Fetch existing comments for the campaign
-      loadComments(campaignId);
-
-      const donationButtons = document.querySelectorAll(".donation-button");
-      donationButtons.forEach((btn) => {
-        btn.addEventListener("click", giveDonation);
-      });
-
-      const postCommentBtns = document.querySelectorAll(".post-comment-btn");
-      postCommentBtns.forEach((btn) => {
-        btn.addEventListener("click", postComment);
-      });
-    });
+    renderCampaignsPage(currentCampaignPage);
   } catch (error) {
     console.error("Error loading campaigns:", error);
     campaignContainer.innerHTML = "<p>Failed to load campaigns.</p>";
   }
 }
 
+function renderCampaignsPage(page) {
+  const campaignContainer = document.getElementById("campaignData");
+  campaignContainer.innerHTML = "";
+
+  const start = (page - 1) * campaignsPerPage;
+  const end = start + campaignsPerPage;
+  const paginatedCampaigns = campaignsData.slice(start, end);
+
+  if (paginatedCampaigns.length === 0) {
+    campaignContainer.innerHTML = "<p>No campaigns found.</p>";
+    return;
+  }
+
+  paginatedCampaigns.forEach((data) => {
+    const isGoalReached = data.totalDonated >= data.goalAmount;
+
+    const card = document.createElement("div");
+    card.classList.add("campaign-card");
+
+    card.innerHTML = `
+      <img src="${data.media}" alt="Campaign Image">
+      <div class="campaign-info">
+        <h2>${data.title}</h2>
+        <h3>Goal: $${data.goalAmount.toLocaleString()}</h3>
+        <h4>Raised: $${data.totalDonated.toLocaleString()}</h4>
+        <p>${data.description}</p>
+        <button class="donation-button" data-id="${data.id}" ${isGoalReached ? "disabled" : ""}>
+          ${isGoalReached ? "Goal Reached" : "Donate"}
+        </button>
+
+        <h5>Comments</h5>
+        <div class="comments-section" id="comments-${data.id}"></div>
+        <input type="text" id="comment-input-${data.id}" placeholder="Write a comment...">
+        <button class="post-comment-btn" data-id="${data.id}">Post Comment</button>
+      </div>
+    `;
+
+    campaignContainer.appendChild(card);
+
+    loadComments(data.id);
+
+    if (!isGoalReached) {
+      card.querySelector(".donation-button").addEventListener("click", giveDonation);
+    }
+
+    card.querySelector(".post-comment-btn").addEventListener("click", postComment);
+  });
+
+  const totalPages = Math.ceil(campaignsData.length / campaignsPerPage);
+  const nav = document.createElement("div");
+  nav.className = "pagination-nav";
+
+  nav.innerHTML = `
+    <button ${page === 1 ? "disabled" : ""} id="prevPage">Prev</button>
+    <span>Page ${page} of ${totalPages}</span>
+    <button ${page === totalPages ? "disabled" : ""} id="nextPage">Next</button>
+  `;
+
+  campaignContainer.appendChild(nav);
+
+  document.getElementById("prevPage")?.addEventListener("click", () => {
+    renderCampaignsPage(--currentCampaignPage);
+  });
+
+  document.getElementById("nextPage")?.addEventListener("click", () => {
+    renderCampaignsPage(++currentCampaignPage);
+  });
+}
+
+async function getTotalDonations(campaignId) {
+  const donationsRef = collection(db, "campaigns", campaignId, "donations");
+  const snapshot = await getDocs(donationsRef);
+  let total = 0;
+  snapshot.forEach(doc => {
+    total += parseFloat(doc.data().amount);
+  });
+  return total;
+}
+
+async function loadUserDonations(userEmail) {
+  userDonationsData = [];
+
+  const campaignsRef = collection(db, "campaigns");
+  const campaignSnapshots = await getDocs(campaignsRef);
+
+  for (const campaign of campaignSnapshots.docs) {
+    const campaignId = campaign.id;
+    const donationRef = collection(db, "campaigns", campaignId, "donations");
+    const q = query(donationRef, where("donor", "==", userEmail));
+    const snapshot = await getDocs(q);
+
+    snapshot.forEach((docSnap) => {
+      userDonationsData.push({
+        title: campaign.data().title,
+        amount: docSnap.data().amount,
+        donatedAt: docSnap.data().donatedAt,
+      });
+    });
+  }
+}
+
+function renderUserDonationsPage(page) {
+  const container = document.getElementById("userDonationsContainer");
+  container.innerHTML = "";
+
+  const start = (page - 1) * donationsPerPage;
+  const end = start + donationsPerPage;
+  const pageData = userDonationsData.slice(start, end);
+
+  if (pageData.length === 0) {
+    container.innerHTML = "<p>No donations found.</p>";
+    return;
+  }
+
+  pageData.forEach((donation) => {
+    const card = document.createElement("div");
+    card.classList.add("donation-card");
+
+    card.innerHTML = `
+      <h3>Campaign: ${donation.title}</h3>
+      <p>Donated Amount: $${donation.amount}</p>
+      <p>Date: ${new Date(donation.donatedAt).toLocaleDateString()}</p>
+    `;
+
+    container.appendChild(card);
+  });
+
+  const totalPages = Math.ceil(userDonationsData.length / donationsPerPage);
+  const nav = document.createElement("div");
+  nav.className = "pagination-nav";
+
+  nav.innerHTML = `
+    <button ${page === 1 ? "disabled" : ""} id="prevDonationPage">Prev</button>
+    <span>Page ${page} of ${totalPages}</span>
+    <button ${page === totalPages ? "disabled" : ""} id="nextDonationPage">Next</button>
+  `;
+
+  container.appendChild(nav);
+
+  document.getElementById("prevDonationPage")?.addEventListener("click", () => {
+    renderUserDonationsPage(--currentDonationPage);
+  });
+
+  document.getElementById("nextDonationPage")?.addEventListener("click", () => {
+    renderUserDonationsPage(++currentDonationPage);
+  });
+}
+
 async function addCamp(e) {
   e.preventDefault();
-
   const title = document.getElementById("title").value.trim();
   const description = document.getElementById("description").value.trim();
   const goalAmount = parseFloat(document.getElementById("goalAmount").value);
@@ -157,7 +278,7 @@ async function addCamp(e) {
 
     alert("Campaign added successfully!");
     document.getElementById("campaignForm").reset();
-    loadCampaign();
+    loadCampaigns();
   } catch (error) {
     console.error("Error adding campaign:", error);
     alert("Failed to add campaign. Please try again.");
@@ -165,13 +286,10 @@ async function addCamp(e) {
 }
 
 function previewCard(title, description, goalAmount) {
-  const preview_title = document.getElementById("preview_title");
-  const preview_desc = document.getElementById("preview_desc");
-  const preview_goal = document.getElementById("preview_goal");
-
-  preview_title.textContent = title;
-  preview_desc.textContent = description;
-  preview_goal.textContent = goalAmount;
+  document.getElementById("preview_title").textContent = title;
+  document.getElementById("preview_desc").textContent = description;
+  document.getElementById("preview_goal").textContent = `$${goalAmount.toLocaleString()}`;
+  document.getElementById("preview_image").src = document.getElementById("media").value.trim();
 }
 
 async function giveDonation(event) {
@@ -199,133 +317,58 @@ async function giveDonation(event) {
     });
 
     alert("Thank you for your donation!");
-    loadCampaign();
+    loadCampaigns();
   } catch (error) {
     console.error("Error processing donation:", error);
     alert("Failed to process donation. Please try again.");
   }
 }
 
-async function getTotalDonations(campaignId) {
-  try {
-    const donationRef = collection(db, "campaigns", campaignId, "donations");
-    const snapshot = await getDocs(donationRef);
+async function postComment(event) {
+  const campaignId = event.target.getAttribute("data-id");
+  const input = document.getElementById(`comment-input-${campaignId}`);
+  const comment = input.value.trim();
+  const user = localStorage.getItem("user_email");
 
-    let total = 0;
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      total += parseFloat(data.amount || 0);
+  if (!comment) {
+    alert("Please write a comment.");
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "campaigns", campaignId, "comments"), {
+      user,
+      comment,
+      postedAt: new Date().toISOString(),
     });
 
-    return total;
+    input.value = "";
+    loadComments(campaignId);
   } catch (error) {
-    console.error("Error getting donation total:", error);
-    return 0;
-  }
-}
-
-//  FIXED fetchUserDonations()
-async function fetchUserDonations(userEmail) {
-  const container = document.getElementById("userDonationsContainer");
-  container.innerHTML = "";
-
-  try {
-    const campaignsRef = collection(db, "campaigns");
-    const campaignSnapshots = await getDocs(campaignsRef);
-
-    for (const campaign of campaignSnapshots.docs) {
-      const campaignId = campaign.id;
-      const donationRef = collection(db, "campaigns", campaignId, "donations");
-      const q = query(donationRef, where("donor", "==", userEmail));
-      const userDonationSnapshot = await getDocs(q);
-
-      userDonationSnapshot.forEach((docSnap) => {
-        const donationData = docSnap.data();
-
-        const card = document.createElement("div");
-        card.classList.add("donation-card");
-
-        card.innerHTML = `
-          <h3>Campaign: ${campaign.data().title}</h3>
-          <p>Donated Amount: $${donationData.amount}</p>
-          <p>Date: ${new Date(donationData.donatedAt).toLocaleDateString()}</p>
-        `;
-
-        container.appendChild(card);
-      });
-    }
-
-    if (container.innerHTML === "") {
-      container.innerHTML = "<p>No donations found.</p>";
-    }
-  } catch (error) {
-    console.error("Error fetching donations:", error);
-    container.innerHTML = "<p>Failed to load donations.</p>";
+    console.error("Error posting comment:", error);
   }
 }
 
 async function loadComments(campaignId) {
-  const commentsSection = document.getElementById(`comments-${campaignId}`);
-  commentsSection.innerHTML = "";
+  const commentSection = document.getElementById(`comments-${campaignId}`);
+  commentSection.innerHTML = "";
 
-  try {
-    const commentsRef = collection(db, "campaigns", campaignId, "comments");
-    const querySnapshot = await getDocs(commentsRef);
+  const commentsRef = collection(db, "campaigns", campaignId, "comments");
+  const snapshot = await getDocs(commentsRef);
 
-    if (querySnapshot.empty) {
-      commentsSection.innerHTML = "<p>No comments yet.</p>";
-      return;
-    }
-
-    querySnapshot.forEach((doc) => {
-      const commentData = doc.data();
-      const commentElement = document.createElement("div");
-      commentElement.classList.add("comment");
-
-      commentElement.innerHTML = `
-        <p><strong>${commentData.user}</strong>: ${commentData.text}</p>
-      `;
-
-      commentsSection.appendChild(commentElement);
-    });
-  } catch (error) {
-    console.error("Error loading comments:", error);
-  }
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const p = document.createElement("p");
+    p.textContent = `${data.user}: ${data.comment}`;
+    commentSection.appendChild(p);
+  });
 }
 
-async function postComment(event) {
-  const button = event.target;
-  const campaignId = button.getAttribute("data-id");
-  const commentInput = document.getElementById(`comment-input-${campaignId}`);
-  const commentText = commentInput.value.trim();
-
-  if (!commentText) {
-    alert("Please enter a comment.");
-    return;
-  }
-
-  const userEmail = localStorage.getItem("user_email");
-
-  try {
-    const commentsRef = collection(db, "campaigns", campaignId, "comments");
-    const newCommentRef = doc(commentsRef); // generates a new unique ID
-
-    await setDoc(newCommentRef, {
-      user: userEmail,
-      text: commentText,
-      postedAt: new Date().toISOString()
-    });
-
-    commentInput.value = ""; // Clear the input field
-    loadComments(campaignId); // Reload comments for the campaign
-  } catch (error) {
-    console.error("Error posting comment:", error);
-    alert("Failed to post comment. Please try again.");
-  }
-}
-
-async function logout() {
-  await signOut(auth);
-  localStorage.clear();
-  window.location.href = "index.html";
+function logout() {
+  signOut(auth).then(() => {
+    localStorage.clear();
+    window.location.href = "index.html";
+  }).catch((error) => {
+    console.error("Logout Error:", error);
+  });
 }

@@ -14,6 +14,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 header .logo h1 {
@@ -21,43 +22,48 @@ header .logo h1 {
   font-size: 24px;
 }
 
-header .navbar button {
+.navbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.navbar-button {
   background-color: #D90429;
   color: white;
-  border: none;
+  text-decoration: none;
   padding: 10px 20px;
-  margin-left: 10px;
-  cursor: pointer;
   border-radius: 5px;
+  font-weight: bold;
   transition: background-color 0.3s;
 }
 
-header .navbar button:hover {
+.navbar-button:hover {
   background-color: #EF233C;
 }
 
-/* Main Section */
+/* Main Container */
 #container {
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
 }
 
-/* Campaign Data Section */
+/* Campaign Cards Section */
 #campaignData {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 cards per row by default */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 20px;
+  padding: 20px 0;
 }
 
 .campaign-card {
   background-color: white;
   padding: 20px;
   border-radius: 8px;
+  border: 1px solid #d1d6d8;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #d1d6d8;
 }
 
 .campaign-card:hover {
@@ -93,7 +99,7 @@ header .navbar button:hover {
   color: #7f8c8d;
 }
 
-/* Add Campaign Form */
+/* Add Campaign Section */
 #add_campaign {
   display: none;
   background-color: #ffffff;
@@ -115,11 +121,20 @@ header .navbar button:hover {
   text-align: center;
 }
 
+.campaign_wrapper {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
 /* Form Styles */
 #campaignForm {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  flex: 1;
+  min-width: 280px;
 }
 
 #campaignForm input,
@@ -148,16 +163,6 @@ header .navbar button:hover {
 
 #campaignForm button:hover {
   background-color: #EF233C;
-}
-
-/* Campaign Wrapper (Form + Preview Side by Side) */
-.campaign_wrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 30px;
-  justify-content: space-between;
-  margin-top: 30px;
-  flex-wrap: wrap;
 }
 
 /* Preview Card */
@@ -191,37 +196,12 @@ header .navbar button:hover {
   line-height: 1.4;
 }
 
-/* Responsive Styles */
-
-/* Medium Screens: 2 cards per row */
-@media (max-width: 1024px) {
-  #campaignData {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* Donations Section */
+#userDonationsSection {
+  display: none;
+  margin-top: 40px;
 }
 
-/* Small Screens: 1 card per row */
-@media (max-width: 600px) {
-  #campaignData {
-    grid-template-columns: 1fr;
-  }
-
-  header {
-    padding: 15px;
-  }
-
-  #add_campaign {
-    padding: 20px;
-    margin: 10px;
-  }
-
-  .campaign-card {
-    padding: 15px;
-  }
-}
-
-
-/* User Donations Container */
 #userDonationsContainer {
   padding: 20px;
   max-width: 1200px;
@@ -229,10 +209,8 @@ header .navbar button:hover {
   background-color: #f4f7fc;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 40px;
 }
 
-/* Section Title */
 #userDonationsContainer h2 {
   text-align: center;
   color: #D90429;
@@ -240,7 +218,6 @@ header .navbar button:hover {
   margin-bottom: 20px;
 }
 
-/* Donation Card */
 .donation-card {
   background-color: white;
   padding: 20px;
@@ -256,14 +233,12 @@ header .navbar button:hover {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Donation Card Title */
 .donation-card h3 {
   color: #D90429;
   font-size: 22px;
   margin-bottom: 10px;
 }
 
-/* Donation Card Info */
 .donation-card p {
   color: #7f8c8d;
   font-size: 16px;
@@ -276,24 +251,43 @@ header .navbar button:hover {
   color: #333;
 }
 
-/* No Donations Found Message */
-#userDonationsContainer p {
-  color: #7f8c8d;
-  font-size: 16px;
-  text-align: center;
-  margin-top: 20px;
-  font-style: italic;
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  #campaignData {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
-  #userDonationsContainer {
+  header {
+    padding: 15px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  #add_campaign {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .campaign-card,
+  .donation-card {
     padding: 15px;
   }
 
-  .donation-card {
-    padding: 15px;
-    margin-bottom: 15px;
+  #campaignData {
+    grid-template-columns: 1fr;
+  }
+
+  .campaign_wrapper {
+    flex-direction: column;
   }
 
   #userDonationsContainer h2 {
