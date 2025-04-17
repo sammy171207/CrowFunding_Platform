@@ -46,7 +46,7 @@ header .navbar button:hover {
 /* Campaign Data Section */
 #campaignData {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row by default */
   gap: 20px;
   padding: 20px;
 }
@@ -192,35 +192,111 @@ header .navbar button:hover {
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
 
-  .navbar button {
-    width: 100%;
-    margin: 5px 0;
+/* Medium Screens: 2 cards per row */
+@media (max-width: 1024px) {
+  #campaignData {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
+/* Small Screens: 1 card per row */
+@media (max-width: 600px) {
   #campaignData {
     grid-template-columns: 1fr;
   }
 
-  .campaign-card {
-    margin-bottom: 20px;
-  }
-
-  .campaign_wrapper {
-    flex-direction: column;
-    align-items: center;
+  header {
+    padding: 15px;
   }
 
   #add_campaign {
     padding: 20px;
+    margin: 10px;
   }
 
-  .preview_card {
-    max-width: 100%;
+  .campaign-card {
+    padding: 15px;
+  }
+}
+
+
+/* User Donations Container */
+#userDonationsContainer {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f4f7fc;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
+}
+
+/* Section Title */
+#userDonationsContainer h2 {
+  text-align: center;
+  color: #D90429;
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+/* Donation Card */
+.donation-card {
+  background-color: white;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e1e4e8;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.donation-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Donation Card Title */
+.donation-card h3 {
+  color: #D90429;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+/* Donation Card Info */
+.donation-card p {
+  color: #7f8c8d;
+  font-size: 16px;
+  margin: 5px 0;
+  line-height: 1.5;
+}
+
+.donation-card p span {
+  font-weight: bold;
+  color: #333;
+}
+
+/* No Donations Found Message */
+#userDonationsContainer p {
+  color: #7f8c8d;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  #userDonationsContainer {
+    padding: 15px;
+  }
+
+  .donation-card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  #userDonationsContainer h2 {
+    font-size: 24px;
   }
 }

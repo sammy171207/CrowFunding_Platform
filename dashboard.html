@@ -11,9 +11,10 @@
     <header>
         <div class="logo"><h1>Crowdfunding Platform</h1></div>
         <div class="navbar">
-            <button class="">Home</button>
+            <button id="back_btn">Home</button>
             <!-- Corrected: Replaced button with a link styled as a button -->
             <button id="add_campaign_btn">Add New Campaign</button>
+            <button id="view_donations_button">View My Donations</button>
             <button id="logout_btn">Logout</button>
         </div>
     </header>
@@ -51,6 +52,12 @@
                 </div> 
        </div> 
         </section> 
+
+        <section id="userDonationsSection" style="display: none;">
+            <h2 style="text-align: center;">Your Donations</h2>
+            <div id="userDonationsContainer"></div>
+          </section>
+          
     </main>
 </body>
 </html>
