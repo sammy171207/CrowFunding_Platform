@@ -93,14 +93,29 @@ async function loadCampaign() {
           <h4>Raised: $${totalDonated.toLocaleString()}</h4>
           <p>${data.description}</p>
           <button class="donation-button" data-id="${campaignId}">Donate</button>
+
+          <h5>Comments</h5>
+          <div class="comments-section" id="comments-${campaignId}">
+            <!-- Comments will appear here -->
+          </div>
+          <input type="text" id="comment-input-${campaignId}" placeholder="Write a comment...">
+          <button class="post-comment-btn" data-id="${campaignId}">Post Comment</button>
         </div>
       `;
 
       campaignContainer.appendChild(card);
 
+      // Fetch existing comments for the campaign
+      loadComments(campaignId);
+
       const donationButtons = document.querySelectorAll(".donation-button");
       donationButtons.forEach((btn) => {
         btn.addEventListener("click", giveDonation);
+      });
+
+      const postCommentBtns = document.querySelectorAll(".post-comment-btn");
+      postCommentBtns.forEach((btn) => {
+        btn.addEventListener("click", postComment);
       });
     });
   } catch (error) {
@@ -246,6 +261,66 @@ async function fetchUserDonations(userEmail) {
   } catch (error) {
     console.error("Error fetching donations:", error);
     container.innerHTML = "<p>Failed to load donations.</p>";
+  }
+}
+
+async function loadComments(campaignId) {
+  const commentsSection = document.getElementById(`comments-${campaignId}`);
+  commentsSection.innerHTML = "";
+
+  try {
+    const commentsRef = collection(db, "campaigns", campaignId, "comments");
+    const querySnapshot = await getDocs(commentsRef);
+
+    if (querySnapshot.empty) {
+      commentsSection.innerHTML = "<p>No comments yet.</p>";
+      return;
+    }
+
+    querySnapshot.forEach((doc) => {
+      const commentData = doc.data();
+      const commentElement = document.createElement("div");
+      commentElement.classList.add("comment");
+
+      commentElement.innerHTML = `
+        <p><strong>${commentData.user}</strong>: ${commentData.text}</p>
+      `;
+
+      commentsSection.appendChild(commentElement);
+    });
+  } catch (error) {
+    console.error("Error loading comments:", error);
+  }
+}
+
+async function postComment(event) {
+  const button = event.target;
+  const campaignId = button.getAttribute("data-id");
+  const commentInput = document.getElementById(`comment-input-${campaignId}`);
+  const commentText = commentInput.value.trim();
+
+  if (!commentText) {
+    alert("Please enter a comment.");
+    return;
+  }
+
+  const userEmail = localStorage.getItem("user_email");
+
+  try {
+    const commentsRef = collection(db, "campaigns", campaignId, "comments");
+    const newCommentRef = doc(commentsRef); // generates a new unique ID
+
+    await setDoc(newCommentRef, {
+      user: userEmail,
+      text: commentText,
+      postedAt: new Date().toISOString()
+    });
+
+    commentInput.value = ""; // Clear the input field
+    loadComments(campaignId); // Reload comments for the campaign
+  } catch (error) {
+    console.error("Error posting comment:", error);
+    alert("Failed to post comment. Please try again.");
   }
 }
 
