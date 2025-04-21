@@ -11,23 +11,25 @@
     <header>
         <div class="logo"><h1>Crowdfunding Platform</h1></div>
         <div class="navbar">
-            <button id="back_btn">Home</button>
-            <!-- Corrected: Replaced button with a link styled as a button -->
-            <button id="add_campaign_btn">Add New Campaign</button>
-            <button id="view_donations_button">View My Donations</button>
-            <button id="logout_btn">Logout</button>
+            <!-- Replaced buttons with links styled as buttons for better accessibility -->
+            <a href="dashboard.html" id="back_btn" class="navbar-button">Home</a>
+            <a href="#" id="add_campaign_btn" class="navbar-button">Add New Campaign</a>
+            <a href="#" id="view_donations_button" class="navbar-button">View My Donations</a>
+            <a href="#" id="campaign_donation" class="navbar-button">Campaign Donation</a>
+            <a href="#" id="logout_btn" class="navbar-button">Logout</a>
         </div>
     </header>
     <main id="container">
         <section id="campaignData">
-            
-
+            <!-- This section will hold the dynamic campaign data -->
         </section>
+        
+        <!-- Add Campaign Section -->
         <section id="add_campaign">
             <h2>Add Campaign</h2>
             <div class="campaign_wrapper">
                 <!-- Form Part -->
-               <form id="campaignForm">
+                <form id="campaignForm">
                     <input type="text" id="title" placeholder="Title" required />
                     <input type="text" id="description" placeholder="Description" required />
                     <input type="number" id="goalAmount" placeholder="Goal Amount" required />
@@ -39,25 +41,31 @@
                         <option value="health">Health</option>
                         <option value="education">Education</option>
                     </select>
-                    <button type="submit">Add Campaign</button>
+                    <button type="submit" class="submit-btn">Add Campaign</button>
                 </form>
 
-              
-               <div class="preview_card">
+                <div class="preview_card">
                     <img id="preview_image" src="" alt="Preview Image" />
                     <h3 id="preview_title">Campaign Title</h3>
                     <p id="preview_desc">Description will appear here...</p>
                     <p id="preview_goal">Goal: $0</p>
                     <span id="preview_category">Category: None</span>
-                </div> 
-       </div> 
+                </div>
+            </div>
         </section> 
 
+        <!-- User Donations Section -->
         <section id="userDonationsSection" style="display: none;">
             <h2 style="text-align: center;">Your Donations</h2>
             <div id="userDonationsContainer"></div>
-          </section>
-          
+        </section>
+
+
+        <!---My Campaign Section-->
+        <section id="mycampaign_donation" style="display: none;">
+            <h2 style="text-align: center;">My Campaign</h2>
+            <div id="campaign_donation_container"></div>
+        </section>
     </main>
 </body>
 </html>
